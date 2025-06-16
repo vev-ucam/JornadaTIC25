@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+    <style>body{margin:0;overflow:hidden}</style>
+  </head>
+
+  <body>
+    <a-scene embedded arjs>
+
+      <!-- ① Pre-carga del vídeo -->
+      <a-assets>
+        <!--  🔈  muted + playsinline evitan el bloqueo de autoplay
+              loop es opcional -->
+        <video id="clip" src="assets/video.mp4"
+               muted playsinline webkit-playsinline
+               preload="auto" loop></video>
+      </a-assets>
+
+      <!-- ② Marcador Hiro -->
+      <a-marker type="pattern" url="assets/marker10.patt">
+        <!-- a-video ya crea un ‘plane’ con material=video -->
+        <a-video
+          src="#clip"
+          width="3" height="1.5"          
+          rotation="-90 0 0"               
+          position="0 0 0">
+        </a-video>
+      </a-marker>
+
+      <a-entity camera></a-entity>
+    </a-scene>
+
+    <!-- ③ Reproducción: arranca al detectar el marcador -->
+    <script>
+      const marker = document.querySelector('a-marker');
+      const vid    = document.querySelector('#clip');
+
+      marker.addEventListener('markerFound', () => vid.play());
+      marker.addEventListener('markerLost',  () => vid.pause());
+    </script>
+  </body>
+</html>
